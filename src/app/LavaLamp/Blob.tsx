@@ -1,4 +1,5 @@
 'use client';
+import { useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 const getRandom = (max: number, min = 0) =>
