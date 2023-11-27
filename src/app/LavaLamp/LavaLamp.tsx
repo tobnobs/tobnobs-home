@@ -13,6 +13,7 @@ const Lamp = styled.div`
   width: 100vw;
   min-width: 100vw;
   z-index: -1;
+  overflow: hidden;
 `;
 
 const Lava = styled.div`
@@ -37,7 +38,8 @@ const LavaLamp = () => {
               height,
               bottom,
               wobbleTime,
-              blobTime,
+              xBlobTime,
+              yBlobTime,
               left,
             } = generateBlobProps();
             return (
@@ -49,9 +51,9 @@ const LavaLamp = () => {
                 height={height}
                 bottom={bottom}
                 wobbleTime={wobbleTime}
-                blobTime={blobTime}
+                xBlobTime={xBlobTime}
+                yBlobTime={yBlobTime}
                 left={left}
-                suppressHydrationWarning
               />
             );
           })}
@@ -62,7 +64,7 @@ const LavaLamp = () => {
           <filter id="goo">
             <feGaussianBlur
               in="SourceGraphic"
-              stdDeviation="10"
+              stdDeviation="50"
               result="blur"
             />
             <feColorMatrix

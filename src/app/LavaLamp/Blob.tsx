@@ -1,19 +1,55 @@
 'use client';
-import { useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
+
+const colorMax = 150;
+const colorMin = 100;
+const minSize = 400;
+const maxSize = 700;
+const minWobble = 1;
+const maxWobble = 5;
+const minBlob = 30;
+const maxBlob = 40;
 
 const getRandom = (max: number, min = 0) =>
   Math.floor(Math.random() * (max - min)) + min;
-const getRandomColor = () =>
-  `rgb(${getRandom(255, 150)}, ${getRandom(255, 150)}, ${getRandom(255, 150)})`;
 
-const blobAnimation = keyframes`
+const getRandomColor = () => {
+  const primaryColor = getRandom(3);
+
+  switch (primaryColor) {
+    case 0:
+      return `rgb(${getRandom(colorMax, colorMin)}, ${getRandom(
+        colorMin,
+        )}, ${getRandom(colorMin)})`;
+    case 1:
+      return `rgb(${getRandom(colorMin)}, ${getRandom(
+        colorMax,
+        colorMin,
+        )}, ${getRandom(colorMin)})`;
+    default:
+      return `rgb(${getRandom(colorMin)}, ${getRandom(
+        colorMin,
+        )}, ${getRandom(colorMax, colorMin)})`;
+  }
+};
+
+const yBlobAnimation = keyframes`
   0%,
   100% {
     transform: translatey(0%);
   }
   50% {
-    transform: translatey(-${getRandom(300)}%);
+    transform: translatey(calc(-100vh - 100%));
+  }
+`;
+
+const xBlobAnimation = keyframes`
+  0%,
+  100% {
+    transform: translatex(0%);
+  }
+  50% {
+    transform: translatex(calc(-100vw - 100%));
   }
 `;
 
@@ -26,14 +62,6 @@ const wobbleAnimation = keyframes`
   }
 `;
 
-const minSize = 200;
-const maxSize = 500;
-const maxBottom = 30;
-const minWobble = 10;
-const maxWobble = 20;
-const minBlob = 10;
-const maxBlob = 30;
-
 type BlobProps = {
   color: string;
   altColor: string;
@@ -41,11 +69,13 @@ type BlobProps = {
   height: number;
   bottom: number;
   wobbleTime: number;
-  blobTime: number;
+  xBlobTime: number;
+  yBlobTime: number;
   left: number;
 };
 
-const Blob = styled.div<BlobProps>`
+const BlobAtom = styled.div<BlobProps>`
+  opacity: 0.7;
   border-radius: 50%;
   background-image: linear-gradient(
     -270deg,
@@ -55,22 +85,40 @@ const Blob = styled.div<BlobProps>`
   position: absolute;
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
-  bottom: -${({ bottom }) => bottom}%;
   left: ${({ left }) => left}%;
   animation: ${wobbleAnimation} ${({ wobbleTime }) => wobbleTime}s ease-in-out
       alternate infinite,
-    ${blobAnimation} ${({ blobTime }) => blobTime}s ease-in-out infinite;
+    ${xBlobAnimation} ${({ xBlobTime }) => xBlobTime}s ease-in-out infinite;
 `;
+
+const BlobWrapper = styled.div<BlobProps>`
+  height: ${({ height }) => height}px;
+  position: absolute;
+  width: 100vw;
+  bottom: -${({ bottom }) => bottom}%;
+  animation: ${yBlobAnimation} ${({ yBlobTime }) => yBlobTime}s ease-in-out
+    infinite;
+`;
+
+const Blob = (props: BlobProps) => {
+  return (
+    <BlobWrapper {...props}>
+      <BlobAtom {...props} />
+    </BlobWrapper>
+  );
+};
 
 export const generateBlobProps = (): BlobProps => ({
   color: getRandomColor(),
   altColor: getRandomColor(),
   width: getRandom(maxSize, minSize),
   height: getRandom(maxSize, minSize),
-  bottom: getRandom(maxBottom),
+  bottom: 0,
+  // bottom: getRandom(maxBottom),
   wobbleTime: getRandom(maxWobble, minWobble),
-  blobTime: getRandom(maxBlob, minBlob),
-  left: getRandom(100),
+  xBlobTime: getRandom(maxBlob, minBlob),
+  yBlobTime: getRandom(maxBlob, minBlob),
+  left: 100,
 });
 
 export default Blob;
