@@ -2,9 +2,9 @@
 import styled, { keyframes } from 'styled-components';
 
 const colorMax = 150;
-const colorMin = 100;
-const minSize = 400;
-const maxSize = 700;
+const colorMin = 50;
+const minSize = 600;
+const maxSize = 800;
 const minWobble = 1;
 const maxWobble = 5;
 const minBlob = 30;
@@ -39,7 +39,7 @@ const yBlobAnimation = keyframes`
     transform: translatey(0%);
   }
   50% {
-    transform: translatey(calc(-100vh - 100%));
+    transform: translatey(calc(100vh - 100%));
   }
 `;
 
@@ -49,7 +49,7 @@ const xBlobAnimation = keyframes`
     transform: translatex(0%);
   }
   50% {
-    transform: translatex(calc(-100vw - 100%));
+    transform: translatex(calc(100vw - 100%));
   }
 `;
 
@@ -67,11 +67,9 @@ type BlobProps = {
   altColor: string;
   width: number;
   height: number;
-  bottom: number;
   wobbleTime: number;
   xBlobTime: number;
   yBlobTime: number;
-  left: number;
 };
 
 const BlobAtom = styled.div<BlobProps>`
@@ -85,7 +83,7 @@ const BlobAtom = styled.div<BlobProps>`
   position: absolute;
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
-  left: ${({ left }) => left}%;
+  left: 0;
   animation: ${wobbleAnimation} ${({ wobbleTime }) => wobbleTime}s ease-in-out
       alternate infinite,
     ${xBlobAnimation} ${({ xBlobTime }) => xBlobTime}s ease-in-out infinite;
@@ -95,7 +93,7 @@ const BlobWrapper = styled.div<BlobProps>`
   height: ${({ height }) => height}px;
   position: absolute;
   width: 100vw;
-  bottom: -${({ bottom }) => bottom}%;
+  top: 0;
   animation: ${yBlobAnimation} ${({ yBlobTime }) => yBlobTime}s ease-in-out
     infinite;
 `;
@@ -113,12 +111,9 @@ export const generateBlobProps = (): BlobProps => ({
   altColor: getRandomColor(),
   width: getRandom(maxSize, minSize),
   height: getRandom(maxSize, minSize),
-  bottom: 0,
-  // bottom: getRandom(maxBottom),
   wobbleTime: getRandom(maxWobble, minWobble),
   xBlobTime: getRandom(maxBlob, minBlob),
   yBlobTime: getRandom(maxBlob, minBlob),
-  left: 100,
 });
 
 export default Blob;
