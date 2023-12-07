@@ -46,6 +46,7 @@ const LavaLamp = () => (
             wobbleTime,
             xBlobTime,
             yBlobTime,
+            blobDelay
           } = generateBlobProps();
           return (
             <Blob
@@ -57,6 +58,7 @@ const LavaLamp = () => (
               wobbleTime={wobbleTime}
               xBlobTime={xBlobTime}
               yBlobTime={yBlobTime}
+              blobDelay={blobDelay}
             />
           );
         })}

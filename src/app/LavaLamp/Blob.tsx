@@ -7,7 +7,7 @@ const minSize = 600;
 const maxSize = 800;
 const minWobble = 1;
 const maxWobble = 5;
-const minBlob = 30;
+const minBlob = 20;
 const maxBlob = 40;
 
 const getRandom = (max: number, min = 0) =>
@@ -20,16 +20,17 @@ const getRandomColor = () => {
     case 0:
       return `rgb(${getRandom(colorMax, colorMin)}, ${getRandom(
         colorMin,
-        )}, ${getRandom(colorMin)})`;
+      )}, ${getRandom(colorMin)})`;
     case 1:
       return `rgb(${getRandom(colorMin)}, ${getRandom(
         colorMax,
         colorMin,
-        )}, ${getRandom(colorMin)})`;
+      )}, ${getRandom(colorMin)})`;
     default:
-      return `rgb(${getRandom(colorMin)}, ${getRandom(
+      return `rgb(${getRandom(colorMin)}, ${getRandom(colorMin)}, ${getRandom(
+        colorMax,
         colorMin,
-        )}, ${getRandom(colorMax, colorMin)})`;
+      )})`;
   }
 };
 
@@ -70,6 +71,7 @@ type BlobProps = {
   wobbleTime: number;
   xBlobTime: number;
   yBlobTime: number;
+  blobDelay: number;
 };
 
 const BlobAtom = styled.div<BlobProps>`
@@ -86,7 +88,8 @@ const BlobAtom = styled.div<BlobProps>`
   left: 0;
   animation: ${wobbleAnimation} ${({ wobbleTime }) => wobbleTime}s ease-in-out
       alternate infinite,
-    ${xBlobAnimation} ${({ xBlobTime }) => xBlobTime}s ease-in-out infinite;
+    ${xBlobAnimation} ${({ xBlobTime }) => xBlobTime}s ease-in-out
+      ${({ xBlobTime, blobDelay }) => (-xBlobTime * blobDelay) / 100}s infinite;
 `;
 
 const BlobWrapper = styled.div<BlobProps>`
@@ -95,6 +98,7 @@ const BlobWrapper = styled.div<BlobProps>`
   width: 100vw;
   top: 0;
   animation: ${yBlobAnimation} ${({ yBlobTime }) => yBlobTime}s ease-in-out
+  ${({ yBlobTime, blobDelay }) => (-yBlobTime * blobDelay) / 100}s
     infinite;
 `;
 
@@ -114,6 +118,7 @@ export const generateBlobProps = (): BlobProps => ({
   wobbleTime: getRandom(maxWobble, minWobble),
   xBlobTime: getRandom(maxBlob, minBlob),
   yBlobTime: getRandom(maxBlob, minBlob),
+  blobDelay: getRandom(100),
 });
 
 export default Blob;
